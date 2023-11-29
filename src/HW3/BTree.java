@@ -18,12 +18,12 @@ class Node<E extends Comparable<E>>{
 public class BTree<E extends Comparable<E>> {
         private Node<E> root;
         private int degree;
-        public void BTree(int degree){
+        public void BTree(int minimumdegree){
+            if(minimumdegree<=0){
+                throw IllegalArgumentException;
+            }
             this.degree = degree;
         }
-
-
-
     }
 
 
