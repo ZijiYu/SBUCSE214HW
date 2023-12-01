@@ -1,0 +1,91 @@
+Index: src/HW3/BTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package HW3;\nimport java.util.Collection.*;\nimport java.util.LinkedList;\n\nclass Node<E extends Comparable<E>>{\n    private E num;\n    private LinkedList<E> key;\n    private boolean isLeaf;\n    private LinkedList<Node<E>> children;\n\n    private Node(int degree, boolean isLeaf){\n        this.num = null;\n        this.isLeaf = true;\n        this.key = null;\n        this.children = null;\n    }\n\npublic class BTree<E extends Comparable<E>> {\n        private Node<E> root;\n        private int degree;\n        public void BTree(int minimumdegree){\n            if(minimumdegree<=0){\n                throw IllegalArgumentException;\n            }\n            this.degree = degree;\n        }\n    }\n\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/HW3/BTree.java b/src/HW3/BTree.java
+--- a/src/HW3/BTree.java	(revision 893d949ae1afddd290889fe66d5e896b066ed211)
++++ b/src/HW3/BTree.java	(date 1701234259575)
+@@ -1,30 +1,48 @@
+ package HW3;
++
++import javax.naming.OperationNotSupportedException;
+ import java.util.Collection.*;
+ import java.util.LinkedList;
+ 
+-class Node<E extends Comparable<E>>{
++class Node<E extends Comparable<E>> {
+     private E num;
+     private LinkedList<E> key;
+     private boolean isLeaf;
+     private LinkedList<Node<E>> children;
+ 
+-    private Node(int degree, boolean isLeaf){
++    private Node(int degree, boolean isLeaf) {
+         this.num = null;
+         this.isLeaf = true;
+         this.key = null;
+         this.children = null;
+     }
++}
+ 
+-public class BTree<E extends Comparable<E>> {
+-        private Node<E> root;
+-        private int degree;
+-        public void BTree(int minimumdegree){
+-            if(minimumdegree<=0){
+-                throw IllegalArgumentException;
+-            }
+-            this.degree = degree;
+-        }
++class BTree<E extends Comparable<E>> {
++    private Node<E> root;
++    private int degree;
++    public void BTree(int minimumdegree){
++        if(minimumdegree<=0){
++            throw new IllegalArgumentException("[Warning] Minimum degree must be greater than 0");
++        }
++        this.degree = minimumdegree;
++    }
++
++    /**
++     * Adds the specified element to this B-tree. If the B-tree already contains this
++     * element, this operation has no effect on the tree (i.e., it silently ignores
++     * attempts to add duplicates).
++     *
++     * @param element The element to be added to this B-tree.
++     * @throws OperationNotSupportedException If the add operation results in a call to add
++     * the element to a non-full node while the node
++     * is actually full.
++     */
++    public void add(E element) throws OperationNotSupportedException{
++
+     }
+ 
+ 
+-}
++
++
++}
+\ No newline at end of file
+Index: CSE214.iml
+===================================================================
+diff --git a/CSE214.iml b/CSE214.iml
+deleted file mode 100644
+--- a/CSE214.iml	(revision c7f591303e2be113e237e03b3ad15a219acce581)
++++ /dev/null	(revision c7f591303e2be113e237e03b3ad15a219acce581)
+@@ -1,11 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<module type="JAVA_MODULE" version="4">
+-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+-    <exclude-output />
+-    <content url="file://$MODULE_DIR$">
+-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+-    </content>
+-    <orderEntry type="inheritedJdk" />
+-    <orderEntry type="sourceFolder" forTests="false" />
+-  </component>
+-</module>
+\ No newline at end of file
