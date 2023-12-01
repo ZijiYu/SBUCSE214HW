@@ -6,13 +6,15 @@ import java.util.Collection;
 import java.util.Queue;
 
 class Node<E extends Comparable<E>> {
-    // 不要用有效键数num，会增加无效内存
+    int size;
     int degree;
     LinkedList<E> key;
-    LinkedList<Node<E>> children;
+    LinkedList<Node> children;
     boolean isLeaf;
-    // constructer for node
+    // constructor for node
     Node(int degree, boolean isLeaf) {
+        this.size = 0;
+        this.degree = degree;
         this.isLeaf = isLeaf;
         this.key = new LinkedList<>();
         if(!isLeaf){
@@ -22,53 +24,65 @@ class Node<E extends Comparable<E>> {
 
     public void addIntoNoFull(E element) {
         if (isLeaf) {
-            int index = getLocation(element);
-            key.add(index, element); // 插入到正确的位置
-        } else {
-            int index = getLocation(element);
-            // 检查子节点是否已满
-            if (children.get(index).key.size() == 2 * degree - 1) {
-                splitChild(children.get(index), index);
-                // 检查分裂后的位置
-                if (key.get(index).compareTo(element) < 0) {
-                    index++;
-                }
+            int location = getLocation(element);
+            if(location != -1){
+                key.add(location, element);// 插入到正确的位置
+                size++;
             }
-            children.get(index).addIntoNoFull(element);
+        } else {
+            int location = getLocation(element);
+            // check is there any duplication
+            if(location != -1){
+                Node<E> current = children.get(location);
+                if(current.size == 2*degree-1){
+                    current.splitChild(current.children.get(location),location);
+                    if (element.compareTo(key.get(location))>0) location+=1;
+                }
+                current.addIntoNoFull(element);
+            }
         }
     }
+
     public void splitChild(Node<E> child, int i) {
+
         Node<E> newchild = new Node<>(degree, child.isLeaf);
+        E midvalue = child.key.get(degree-1);
 
         // 移动键到新节点
-        for (int j = 0; j < degree - 1; j++) {
+        for (int j = 0; j < degree-1; j++) {
             newchild.key.add(child.key.get(degree));
-            child.key.remove(degree); // 总是移除同一个位置的元素
+            ++newchild.size;
+            child.key.remove(degree);
+            --child.size;
         }
+        --child.size;
+        key.add(i,midvalue);
+        child.key.remove(degree - 1);
 
         // 如果不是叶节点，移动子节点到新节点
         if (!child.isLeaf) {
             for (int j = 0; j < degree; j++) {
                 newchild.children.add(child.children.get(degree));
-                child.children.remove(degree); // 总是移除同一个位置的元素
+                child.children.remove(degree);
             }
         }
-
-        // 将新节点添加到父节点的子节点列表中
-        children.add(i + 1, newchild);
-
-        // 将child的中间键移动到父节点
-        key.add(i, child.key.get(degree - 1));
-        child.key.remove(degree - 1); // 移除已经上移的键
+        children.add(i+1,newchild);
     }
 
     private int getLocation(E element) {
-        int location = 0;
-        while (location < key.size() && key.get(location).compareTo(element) < 0) {
-            location++;
+        int location = size;
+        while (location >=0 && element.compareTo(key.get(location-1))<0) {
+            if(key.get(location).compareTo(element) == 0) return -1;
+            location--;
         }
-        return location;
+        return size;
     }
+
+    @Override
+    public String toString(){
+        return key.toString();
+    }
+
 }
 
 public class BTree<E extends Comparable<E>> {
@@ -95,26 +109,26 @@ public class BTree<E extends Comparable<E>> {
      */
     public void add(E element) throws OperationNotSupportedException{
         int max = 2*degree-1;
-        // if root is null
         if(root == null) {
             root = new Node<E>(degree, true);
             root.key.add(element);
+            root.size++;
         } else {
             if(root.key.size()==max){
                 Node<E> newRoot = new Node<E>(degree,false);
-                // 旧的根节点成为新根节点的一个子节点
                 newRoot.children.add(root);
                 newRoot.splitChild(root,0);
-                int i = 0;
-                // 新根节点有两个子节点。决定哪个子节点将有新键
-                if(newRoot.key.get(i).compareTo(element)<0) i++;
-                newRoot.children.get(i).addIntoNoFull(element);
+                newRoot.size+=1;
+//                    int i = 0;
+//                    if(newRoot.key.get(i).compareTo(element)<0) i++;
+                newRoot.addIntoNoFull(element);
                 root = newRoot;
             }else{// 树没有满
                 root.addIntoNoFull(element);
             }
         }
     }
+
     public void addAll(Collection<E> elements) throws OperationNotSupportedException {
         for (E e : elements) this.add(e);
     }
@@ -122,7 +136,9 @@ public class BTree<E extends Comparable<E>> {
         String nodesep = " ";
         Queue<Node> queue1 = new LinkedList<>();
         Queue<Node> queue2 = new LinkedList<>();
-        queue1.add(root); /* root of the tree being added */
+        if(root!=null){
+            queue1.add(root); /* root of the tree being added */
+        }
         while (true) {
             while (!queue1.isEmpty()) {
                 Node node = queue1.poll();
@@ -139,4 +155,6 @@ public class BTree<E extends Comparable<E>> {
             }
         }
     }
+
 }
+
