@@ -8,13 +8,15 @@ public class BTree<E extends Comparable<E>> {
     private Node<E> root;
     private int degree;
 
+    // Node class
     class Node<E extends Comparable<E>> {
         int size;
         int degree;
         LinkedList<E> key;
         LinkedList<Node> children;
         boolean isLeaf;
-        // constructor for node
+
+        // Node constructor
         Node(int degree, boolean isLeaf) {
             this.size = 0;
             this.degree = degree;
@@ -30,7 +32,9 @@ public class BTree<E extends Comparable<E>> {
         }
     }
 
+    // B-Tree constructor
     public BTree(int minimumDegree){
+        // Cannot have negative degree
         if(minimumDegree<=0){
             throw new IllegalArgumentException("[Warning] Minimum degree must be greater than 0");
         }
@@ -38,34 +42,40 @@ public class BTree<E extends Comparable<E>> {
         this.root = null;
     }
 
+    // Add element into not full tree
     public void addIntoNoFull(E element, Node<E> node) {
+        // test if exist
         if(exist(element)==false){
+            // if node is leaf
             if (node.isLeaf) {
                 int location = getLocation(element,node);
-                if(location != -10){
-                    node.key.add(location, element);// 插入到正确的位置
-                    node.size++;
-                    if(node.size == 2*degree-1 && node== root){
-                        Node<E> newRoot = new Node<>(degree,false);
-                        newRoot.children.add(0,root);
-                        splitChild(newRoot,root,0);
-                        root = newRoot;
-                    }
+                node.key.add(location, element);
+                node.size++;
+                if(node.size == 2*degree-1 && node== root){
+                    Node<E> newRoot = new Node<>(degree,false);
+                    newRoot.children.add(0,root);
+                    splitChild(newRoot,root,0);
+                    root = newRoot; // let the newRoot become root
                 }
             }
+            // if it is inner node
             else {
+
                 int location = getLocation(element,node);
-                // check is there any duplication
-                if(location != -10){
-                    Node<E> current = node.children.get(location);//子节点[4,5,6,7,8]
-                    if(current.size == 2*degree-1){
-                        this.splitChild(node,current,location);
-                        if (element.compareTo(node.key.get(location))>0) location+=1;
-                    }
-                    addIntoNoFull(element,current);
-                    if(current.size==2*degree-1){
-                        splitChild(node,current,location);
-                    }
+                // get a Child of the given node
+                Node<E> current = node.children.get(location);
+                // if current is full
+                if(current.size == 2*degree-1){
+                    splitChild(node,current,location);
+                    // if element is greater than key.get(location), location++;
+                    // this is for max_degree detection
+                    if (element.compareTo(node.key.get(location))>0) ++location;
+                }
+                // add the element into the subtree
+                addIntoNoFull(element,current);
+                // if the node is full split
+                if(current.size==2*degree-1){
+                    splitChild(node,current,location);
                 }
             }
         }
@@ -76,7 +86,7 @@ public class BTree<E extends Comparable<E>> {
         Node<E> newchild = new Node<>(degree, child.isLeaf);
         E midvalue = child.key.get(degree-1);
 
-        // 移动键到新节点
+        // move key into new node
         for (int j = 0; j < degree-1; j++) {
             newchild.key.add(child.key.get(degree));
             ++newchild.size;
@@ -88,28 +98,29 @@ public class BTree<E extends Comparable<E>> {
         parent.size+=1;
         child.key.remove(degree - 1);
 
+        // if it is inner node
         if (!child.isLeaf) {
             for (int j = 0; j < degree; j++) {
                 newchild.children.add(child.children.get(degree));
                 child.children.remove(degree);
             }
         }
+        // parent add children node reference
         parent.children.add(i+1,newchild);
     }
 
     private int getLocation(E element, Node<E> node) {
         int location = node.size;
-        while (location >=0 && element.compareTo(node.key.get(location-1))<0) {
+        // search from last element
+        while (location > 0 && element.compareTo(node.key.get(location-1))<0) {
             location--;
-            if(location == 0){
-                break;
-            }
         }
-        if(location != -1){
-            return location;
-        }else {
-            return node.size;
-        }
+//            if(location != -1){
+//                return location;
+//            }else {
+//                return node.size;
+//            }
+        return location;
     }
 
     /**
@@ -124,7 +135,7 @@ public class BTree<E extends Comparable<E>> {
      */
     public void add(E element) throws OperationNotSupportedException{
         int max = 2*degree-1;
-
+        // add the first element
         if(root == null) {
             root = new Node<E>(degree, true);
             root.key.add(element);
@@ -140,34 +151,6 @@ public class BTree<E extends Comparable<E>> {
                 addIntoNoFull(element,root);
             }
         }
-
-
-    }
-
-    public Node find(E element){
-        return findRec(element, root);
-    }
-
-    private Node<E> findRec(E element, Node<E> node) {
-        if (node == null) {
-            return null; // 元素不存在于树中
-        }
-
-        int index = 0;
-        while (index < node.size && element.compareTo(node.key.get(index)) > 0) {
-            index++;
-        }
-
-        if (index < node.size && element.compareTo(node.key.get(index)) == 0) {
-            return node; // 找到元素
-        }
-
-        if (node.isLeaf) {
-            return null; // 元素不存在于树中
-        }
-
-        // 继续在适当的子节点中查找
-        return findRec(element, node.children.get(index));
     }
 
     public boolean exist(E element) {
@@ -179,26 +162,19 @@ public class BTree<E extends Comparable<E>> {
             return false;
         } else {
             int index = 0;
-            // 查找元素或找到第一个大于它的元素的位置
             while (index < node.size && element.compareTo(node.key.get(index)) > 0) {
                 index++;
             }
-
-            // 检查元素是否在当前节点
             if (index < node.size && element.compareTo(node.key.get(index)) == 0) {
                 return true;
             }
-
-            // 如果是叶子节点，元素不存在
+            // no need to recurse for leaves
             if (node.isLeaf) {
                 return false;
             }
-
-            // 否则，在子节点中递归查找
             return existRec(element, node.children.get(index));
         }
     }
-
 
     public void addAll(Collection<E> elements) throws OperationNotSupportedException {
         for (E e : elements) this.add(e);
@@ -228,7 +204,46 @@ public class BTree<E extends Comparable<E>> {
         }
     }
 
+    public class Pair{
+        private Node<E> node;
+        private int index;
 
+        public Pair(Node node, int index){
+            this.node = node;
+            this.index = index;
+        }
+    }
+    public String find(E element){
+        Pair pair = findRec(element, root);
+        StringBuffer str = new StringBuffer();
+        if(pair== null){
+            str.append("null");
+        }else{
+            str.append(pair.node.toString());
+            str.append(pair.index);
+        }
+        return str.toString();
+    }
 
+    private Pair findRec(E element, Node<E> node) {
+        if (node == null) {
+            return null; // node is null
+        }
+
+        int index = 0;
+        while (index < node.size && element.compareTo(node.key.get(index)) > 0) {
+            index++;
+        }
+
+        if (index < node.size && element.compareTo(node.key.get(index)) == 0) {
+            return new Pair(node, index);
+        }
+
+        if (node.isLeaf) {
+            return null; // not in the tree
+        }
+
+        // not in the tree and find subtree
+        return findRec(element, node.children.get(index));
+    }
 }
-

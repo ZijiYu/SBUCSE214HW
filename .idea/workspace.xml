@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84296a22-7162-49c5-8036-952d6acd768e" name="Changes" comment="finished debug but there is some incompatibility problem with professor's code" />
+    <list default="true" id="84296a22-7162-49c5-8036-952d6acd768e" name="Changes" comment="final draft v.1 Dec 1st 7:16ß">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -129,6 +131,8 @@
       <workItem from="1701409369263" duration="34000" />
       <workItem from="1701409407135" duration="26000" />
       <workItem from="1701409646891" duration="405000" />
+      <workItem from="1701432894812" duration="159000" />
+      <workItem from="1701456698066" duration="12000" />
     </task>
     <task id="LOCAL-00001" summary="HW3">
       <option name="closed" value="true" />
@@ -234,7 +238,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701409973087</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="final draft v.1 Dec 1st 7:16">
+      <option name="closed" value="true" />
+      <created>1701433022604</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1701433022604</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -255,7 +267,8 @@
     <MESSAGE value="HW3" />
     <MESSAGE value="update split" />
     <MESSAGE value="finished debug but there is some incompatibility problem with professor's code" />
-    <option name="LAST_COMMIT_MESSAGE" value="finished debug but there is some incompatibility problem with professor's code" />
+    <MESSAGE value="final draft v.1 Dec 1st 7:16" />
+    <option name="LAST_COMMIT_MESSAGE" value="final draft v.1 Dec 1st 7:16" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
