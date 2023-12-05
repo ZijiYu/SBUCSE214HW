@@ -48,19 +48,18 @@ public class BTree<E extends Comparable<E>> {
         if(exist(element)==false){
             // if node is leaf
             if (node.isLeaf) {
-                int location = getLocation(element,node);
-                node.key.add(location, element);
-                node.size++;
                 if(node.size == 2*degree-1 && node== root){
                     Node<E> newRoot = new Node<>(degree,false);
                     newRoot.children.add(0,root);
                     splitChild(newRoot,root,0);
                     root = newRoot; // let the newRoot become root
                 }
+                int location = getLocation(element,node);
+                node.key.add(location, element);
+                node.size++;
             }
             // if it is inner node
             else {
-
                 int location = getLocation(element,node);
                 // get a Child of the given node
                 Node<E> current = node.children.get(location);
@@ -69,14 +68,10 @@ public class BTree<E extends Comparable<E>> {
                     splitChild(node,current,location);
                     // if element is greater than key.get(location), location++;
                     // this is for max_degree detection
-                    if (element.compareTo(node.key.get(location))>0) ++location;
+                    if (element.compareTo(node.key.get(location))>0) location++;
                 }
                 // add the element into the subtree
-                addIntoNoFull(element,current);
-                // if the node is full split
-                if(current.size==2*degree-1){
-                    splitChild(node,current,location);
-                }
+                addIntoNoFull(element,node.children.get(location));
             }
         }
     }

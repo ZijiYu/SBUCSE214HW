@@ -90,12 +90,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="CSE214" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
       <module name="CSE214" />
       <option name="filePath" />
@@ -133,7 +127,9 @@
       <workItem from="1701409646891" duration="405000" />
       <workItem from="1701432894812" duration="159000" />
       <workItem from="1701456698066" duration="12000" />
-      <workItem from="1701462707064" duration="980000" />
+      <workItem from="1701462707064" duration="1841000" />
+      <workItem from="1701719207225" duration="606000" />
+      <workItem from="1701721226006" duration="1000" />
     </task>
     <task id="LOCAL-00001" summary="HW3">
       <option name="closed" value="true" />
@@ -263,7 +259,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701462926526</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="test for all cases Dec 1st 15:34">
+      <option name="closed" value="true" />
+      <created>1701491439058</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1701491439058</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
